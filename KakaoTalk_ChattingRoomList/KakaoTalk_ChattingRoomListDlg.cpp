@@ -26,11 +26,14 @@ CKakaoTalkChattingRoomListDlg::CKakaoTalkChattingRoomListDlg(CWnd* pParent /*=nu
 void CKakaoTalkChattingRoomListDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LIST1, m_KakaoChatList);
 }
 
 BEGIN_MESSAGE_MAP(CKakaoTalkChattingRoomListDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_SNED_BTN, &CKakaoTalkChattingRoomListDlg::OnBnClickedSnedBtn)
+	ON_BN_CLICKED(IDC_SNED_BTN2, &CKakaoTalkChattingRoomListDlg::OnBnClickedSnedBtn2)
 END_MESSAGE_MAP()
 
 
@@ -50,8 +53,8 @@ BOOL CKakaoTalkChattingRoomListDlg::OnInitDialog()
 	// 카톡 핸들값 얻어옴.
 	m_hWnd_Kakao = ::FindWindow(NULL, L"카카오톡");
 	if (!m_hWnd_Kakao) {
-		AfxMessageBox(L"카카오톡을 먼저 실행하세요.");
 		AfxGetMainWnd()->PostMessage(WM_CLOSE);
+		AfxMessageBox(L"카카오톡을 먼저 실행하세요.");
 	}
 	
 /*
@@ -65,31 +68,47 @@ BOOL CKakaoTalkChattingRoomListDlg::OnInitDialog()
 	▶lpClassName : 검색에 사용할 차일드 윈도우 클래스 이름, 또는 아톰값.NULL이면 모든 윈도우 클래스를 검색한다.
 
 	▶lpWindowName : 검색에 사용할 윈도우의 캡션 문자열.NULL이면 모든 캡션의 윈도우를 검색한다.
+
+	AfxGetMainWnd()->PostMessage(WM_CLOSE);
 */
+
+	HWND hOnlineMainView = ::FindWindowEx(m_hWnd_Kakao, NULL, L"EVA_ChildWindow", NULL); //::GetWindow(m_hWnd_Kakao, GW_CHILD);
+	// 원본
+	//HWND hOnlineMainView_Child = ::FindWindowEx(hOnlineMainView, NULL, L"EVA_Window", NULL); // ContactListView
+	//HWND hNextChild = ::GetWindow(hOnlineMainView_Child, GW_HWNDNEXT); //ChatRoomListView
+
+	//HWND hChatRoomListCtrl = ::FindWindowEx(hNextChild, NULL, L"EVA_VH_ListControl_Dblclk", NULL); // ChatRoomListCtrl
 	
-	// 카톡 채팅방 리스트 얻어옴.
-	m_hWnd_ChatList = ::FindWindowEx(m_hWnd_Kakao, NULL, L"EVA_Window", NULL);
+	HWND hOnlineMainView_Child = ::FindWindowEx(hOnlineMainView, NULL, L"EVA_Window", NULL); // ContactListView
+	HWND hNextChild = ::GetWindow(hOnlineMainView_Child, GW_HWNDNEXT); //ChatRoomListView
 
-	if (!m_hWnd_ChatList) {
-		AfxMessageBox(L"프로그램 오류!! 원종이한테 문의 하세요. login??");
+	HWND hChatRoomListCtrl = ::FindWindowEx(hNextChild, NULL, L"Edit", NULL); // ChatRoomListCtrl
+
+	if (!hChatRoomListCtrl) {
 		AfxGetMainWnd()->PostMessage(WM_CLOSE);
+		AfxMessageBox(L"카톡 로그인 하세요.");
 	}
-		
-	//m_hWnd_ChatList
 
-	HWND mainWindow = ::FindWindow(NULL, L"kakaoTXT.txt - Notepad");
-	HWND editWindow = ::FindWindowEx(mainWindow, NULL, L"edit", NULL);
-	char m_strText[10] = "test";
-	::SendMessageW(editWindow, WM_SETTEXT, 0, (LPARAM)TEXT("abc"));
-	//::PostMessage(editWindow, WM_PASTE, 0, 0);
-	//::PostMessage(editWindow, WM_KEYDOWN, VK_RETURN, NULL);
-	//::PostMessage(editWindow, WM_KEYUP, VK_RETURN, NULL);
+	//m_KakaoChatList.ModifyStyleEx(0, LBS_MULTIPLESEL | LBS_MULTICOLUMN);
 
 
 
+	
 
-	//AfxGetMainWnd()->PostMessage(WM_CLOSE);
 
+
+	
+	wchar_t temp_text[256];
+
+	::SendMessage(hChatRoomListCtrl, WM_GETTEXT, (WPARAM)256, (LPARAM)temp_text); 
+	//AfxMessageBox(temp_text);
+
+
+	/*HINSTANCE aaa = hChatRoomListCtrl;
+	char buf[200];
+	CString str;
+	GetClassName(hChatRoomListCtrl, (LPWSTR)buf, 200);*/
+	
 	//m_hwndKakaoTalk1Child = ::FindWindowEx(m_hwndKakaoTalk1, NULL, L"RichEdit20W", NULL);
 	////메모장에 문자열 입력! 
 	//::SendMessage(m_hwndKakaoTalk1Child, WM_SETTEXT, 0, (LPARAM)m_strText);
@@ -147,4 +166,72 @@ BOOL CKakaoTalkChattingRoomListDlg::PreTranslateMessage(MSG *pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CKakaoTalkChattingRoomListDlg::OnBnClickedSnedBtn()
+{
+/*
+	CString str_Input;
+	GetDlgItemText(IDC_EDIT1, str_Input); // 채팅방 이름을 얻어옴.CString str_ChatRoom, str_ChatRoom2, strValue;
+
+	// 메모장에 입력
+	HWND mainWindow = ::FindWindow(NULL, L"kakaoTXT.txt - Notepad");
+	HWND editWindow = ::FindWindowEx(mainWindow, NULL, L"edit", NULL);
+	
+	::SendMessageW(editWindow, WM_SETTEXT, 0, (LPARAM)(LPCTSTR)str_Input);
+*/
+	 
+	wchar_t temp_text[256];
+
+	HWND mainWindow = ::FindWindow(NULL, L"aaaTEXT.txt - Notepad");
+	HWND editWindow = ::FindWindowEx(mainWindow, NULL, L"edit", NULL);
+
+	::SendMessage(editWindow, WM_GETTEXT, (WPARAM)256, (LPARAM)temp_text);
+	//AfxMessageBox(temp_text);
+	
+
+	m_KakaoChatList.AddString(temp_text);
+	m_KakaoChatList.SetCurSel(1);
+	
+
+	
+
+
+
+	////::PostMessage(editWindow, WM_PASTE, 0, 0);
+	////::PostMessage(editWindow, WM_KEYDOWN, VK_RETURN, NULL);
+	////::PostMessage(editWindow, WM_KEYUP, VK_RETURN, NULL);
+}
+
+
+void CKakaoTalkChattingRoomListDlg::OnBnClickedSnedBtn2()
+{
+	// 몇개의 아이템이 선택되어졌는지 카운트
+	int nCount = m_KakaoChatList.GetSelCount();
+
+	// 선택되어진 아이템이 하나도 없으면 리턴.
+	if (nCount <= 0)
+		return;
+
+	// 배열을 하나 만들고, 크기를 설정한다.
+	CArray<int, int> aryListBoxSel;
+	aryListBoxSel.SetSize(nCount);
+
+	// 아이템중에서 선택되어진 인덱스를 배열에 읽어온다.
+	m_KakaoChatList.GetSelItems(nCount, aryListBoxSel.GetData());
+	
+	int sel;
+	CString str_Sel;
+	for (int i = 0; i < nCount; i++)
+	{
+		// 선택된걸 하나씩 뽑아서 먼가 처리를 하겠지...
+		 sel = aryListBoxSel[i];
+		 m_KakaoChatList.GetText(sel, str_Sel);
+		 MessageBox(str_Sel);
+		// do something... 
+	}
+// 출처 >> https://mins79.tistory.com/entry/%EC%B6%94%EA%B0%80%EC%82%BD%EC%9E%85%EC%82%AD%EC%A0%9C%EC%84%A0%ED%83%9D-MFC-ListBox-%EC%98%88%EC%A0%9C	
+
+
 }

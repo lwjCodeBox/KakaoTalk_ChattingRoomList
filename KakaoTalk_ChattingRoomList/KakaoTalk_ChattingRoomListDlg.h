@@ -41,4 +41,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL PreTranslateMessage(MSG *pMsg);
+	afx_msg void OnBnClickedSnedBtn();
+	CListBox m_KakaoChatList;
+	afx_msg void OnBnClickedSnedBtn2();
 };
