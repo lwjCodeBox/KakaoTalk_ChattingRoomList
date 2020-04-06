@@ -74,47 +74,43 @@ BOOL CKakaoTalkChattingRoomListDlg::OnInitDialog()
 
 	HWND hOnlineMainView = ::FindWindowEx(m_hWnd_Kakao, NULL, L"EVA_ChildWindow", NULL); //::GetWindow(m_hWnd_Kakao, GW_CHILD);
 	// 원본
-	//HWND hOnlineMainView_Child = ::FindWindowEx(hOnlineMainView, NULL, L"EVA_Window", NULL); // ContactListView
-	//HWND hNextChild = ::GetWindow(hOnlineMainView_Child, GW_HWNDNEXT); //ChatRoomListView
-
-	//HWND hChatRoomListCtrl = ::FindWindowEx(hNextChild, NULL, L"EVA_VH_ListControl_Dblclk", NULL); // ChatRoomListCtrl
-	
 	HWND hOnlineMainView_Child = ::FindWindowEx(hOnlineMainView, NULL, L"EVA_Window", NULL); // ContactListView
 	HWND hNextChild = ::GetWindow(hOnlineMainView_Child, GW_HWNDNEXT); //ChatRoomListView
 
-	HWND hChatRoomListCtrl = ::FindWindowEx(hNextChild, NULL, L"Edit", NULL); // ChatRoomListCtrl
+	HWND hChatRoomListCtrl = ::FindWindowEx(hNextChild, NULL, L"EVA_VH_ListControl_Dblclk", NULL); // ChatRoomListCtrl
+	
+	//HWND hOnlineMainView_Child = ::FindWindowEx(hOnlineMainView, NULL, L"EVA_Window", NULL); // ContactListView
+	//HWND hNextChild = ::GetWindow(hOnlineMainView_Child, GW_HWNDNEXT); //ChatRoomListView
+
+	//HWND hChatRoomListCtrl = ::FindWindowEx(hNextChild, NULL, L"Edit", NULL); // ChatRoomListCtrl
 
 	if (!hChatRoomListCtrl) {
 		AfxGetMainWnd()->PostMessage(WM_CLOSE);
 		AfxMessageBox(L"카톡 로그인 하세요.");
 	}
-
-	//m_KakaoChatList.ModifyStyleEx(0, LBS_MULTIPLESEL | LBS_MULTICOLUMN);
-
-
-
 	
-
-
-
+	/*CString str_txt;
+	::SendMessage(hChatRoomListCtrl, WM_GETTEXT, 0, (LPARAM)(LPCTSTR)str_txt);*/
 	
-	wchar_t temp_text[256];
-
-	::SendMessage(hChatRoomListCtrl, WM_GETTEXT, (WPARAM)256, (LPARAM)temp_text); 
+	/*wchar_t temp_text[256];
+	::SendMessage(hChatRoomListCtrl, WM_GETTEXT, 256, (LPARAM)temp_text);*/
+	
 	//AfxMessageBox(temp_text);
 
-
-	/*HINSTANCE aaa = hChatRoomListCtrl;
-	char buf[200];
-	CString str;
-	GetClassName(hChatRoomListCtrl, (LPWSTR)buf, 200);*/
 	
-	//m_hwndKakaoTalk1Child = ::FindWindowEx(m_hwndKakaoTalk1, NULL, L"RichEdit20W", NULL);
-	////메모장에 문자열 입력! 
-	//::SendMessage(m_hwndKakaoTalk1Child, WM_SETTEXT, 0, (LPARAM)m_strText);
-	//::PostMessage(m_hwndKakaoTalk1Child, WM_KEYDOWN, 0x0000000D, 0x001C0001);
-	//::PostMessage(m_hwndKakaoTalk1Child, WM_KEYDOWN, 0x0000000D, 0x001C0001);
 
+	wchar_t temp_text[256];
+	::GetWindowText(hChatRoomListCtrl, temp_text, 256);
+	//MessageBox(temp_text);
+
+	// m_hwndKakaoTalk1 = ::FindWindow(NULL, str_ChatRoom);	
+	// m_hwndKakaoTalk1Child = ::FindWindowEx(m_hwndKakaoTalk1, NULL, L"RichEdit20W", NULL);
+	////메모장에 문자열 입력! 
+	LPCTSTR  m_strText = L"test";
+	::SendMessage(hChatRoomListCtrl, WM_SETTEXT, 0, (LPARAM)m_strText);
+	::PostMessage(hOnlineMainView_Child, WM_KEYDOWN, 0x0000000D, 0x001C0001);
+	//::PostMessage(hChatRoomListCtrl, WM_KEYDOWN, 0x0000000D, 0x001C0001);
+	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -173,7 +169,7 @@ void CKakaoTalkChattingRoomListDlg::OnBnClickedSnedBtn()
 {
 /*
 	CString str_Input;
-	GetDlgItemText(IDC_EDIT1, str_Input); // 채팅방 이름을 얻어옴.CString str_ChatRoom, str_ChatRoom2, strValue;
+	GetDlgItemText(IDC_EDIT1, str_Input); // 입력한 내용.
 
 	// 메모장에 입력
 	HWND mainWindow = ::FindWindow(NULL, L"kakaoTXT.txt - Notepad");
